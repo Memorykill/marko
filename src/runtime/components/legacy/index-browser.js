@@ -26,6 +26,16 @@ exports.initWidgets = modernMarko.init;
 if (Widget) {
     var WidgetProto = Widget.prototype;
     WidgetProto.setProps = function(newInput) {
+        // eslint-disable-next-line no-constant-condition
+        if ("MARKO_DEBUG") {
+            // Throw if setProps is called on a widget that cannot rerender
+            if (this.___hydratedWithoutRerender) {
+                throw new Error(
+                    "You cannot rerender a widget that is split or has no state.  You must use defineComponent with a getInitialState method, even if that method just returns the input. Widget: " +
+                        this.___type
+                );
+            }
+        }
         this.___isReceivingNewInput = true;
         this.___setInput(newInput);
     };
